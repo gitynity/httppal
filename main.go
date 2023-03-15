@@ -130,10 +130,27 @@ func main() {
 	}
 	fmt.Println()
 
-	// Print the response body
+	// get response body
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatalf("Error reading response body: %s", err)
 	}
-	fmt.Println(string(body))
+	// Create a map to hold the JSON data
+	var data map[string]interface{}
+
+	// Unmarshal the JSON into the map
+	err = json.Unmarshal(body, &data)
+	if err != nil {
+		fmt.Println("Error unmarshaling JSON:", err)
+		return
+	}
+
+	// Pretty print the JSON
+	prettyJSON, err := json.MarshalIndent(data, "", "  ")
+	if err != nil {
+		fmt.Println("Error marshaling JSON:", err)
+		return
+	}
+
+	fmt.Println(string(prettyJSON))
 }
